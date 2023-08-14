@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html land='eng'>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equir="'X-UA-Compatible" content="IE=edge" />
+    <script src="https://kit.fontawesome.com/8940ceafa3.js" crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="weather.css" rel="stylesheet" />
+</head>
+
+<body>
+
+    <div class="card ">
+        <div class="search">
+            <input type="text" placeholder="enter city name" spellcheck="false" />
+            <button><i class="fas fa-search"></i> </button>
+        </div>
+
+        <div class="error">
+            <p>Invalid city name</p>
+        </div>
+
+        <div class="weather">
+            <img class="weather-icon" src="https://cdn-icons-png.flaticon.com/512/1146/1146869.png?w=740&t=st=1691830320~exp=1691830920~hmac=14cefa0acc63928d22defe203d904fa39d470cc46290ec4b373a4f1c4690c2d5" />
+            <h1 class="temp">22°c</h1>
+            <h2 class="city">New York</h2>
+            <div class="details">
+                <div class="col">
+                    <img src="https://img.freepik.com/premium-vector/vector-water-drop-symbol-collection_153791-850.jpg?size=626&ext=jpg&ga=GA1.2.1995726095.1686674862&semt=ais" />
+                    <div>
+                        <p class="humidity">50</p>
+                        <p>Humidity</p>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <img src="https://img.freepik.com/free-icon/wind_318-279320.jpg?size=626&ext=jpg&ga=GA1.2.1995726095.1686674862&semt=ais" />
+                    <div>
+                        <p class="wind">15 km/h</p>
+                        <p class="wind-p">wind speed</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <script>
+        const apikey = '31b12aa9c14faedcbe006fdcdbab1836';
+        const apiUrl = 'https://api.openweathermap.org/data/2.5/weather?units=metric&q=';
+        const searchBox = document.querySelector('.search input');
+        const searchBtn = document.querySelector('.search button');
+        const weatherIcon = document.querySelector('.weather-icon')
+
+        async function checkWeather(city) {
+            const response = await fetch(apiUrl + city + `&appid=${apikey}`);
+            if (response.status == 404) {
+                document.querySelector('.error').style.display = 'block';
+                document.querySelector('.weather').style.display = 'none';
+            } else {
+                var data = await response.json();
+                // console.log(data)
+
+                document.querySelector('.city').innerHTML = data.name;
+                document.querySelector('.temp').innerHTML = Math.round(data.main.temp) + "°c"
+                document.querySelector('.humidity').innerHTML = data.main.humidity + "%";
+                document.querySelector('.wind').innerHTML = data.wind.speed + " km/h";
+                if (data.weather[0].main == "Clouds") {
+                    weatherIcon.src = 'https://img.freepik.com/premium-photo/premium-weather-condition-icon-3d-render_150525-101.jpg?size=626&ext=jpg'
+                } else if (data.weather[0].main == "Clear") {
+                    weatherIcon.src = 'https://cdn-icons-png.flaticon.com/512/1004/1004611.png?w=740&t=st=1691830220~exp=1691830820~hmac=1a1cde81f5a86b7b2b399606bd39583e8793ddbe040f3a35c1995ab9a35723f7'
+                } else if (data.weather[0].main == "Rain") {
+                    weatherIcon.src = 'https://img.freepik.com/premium-vector/d-weather-forecast-icon-raining-wet-drizzling_316839-4334.jpg?size=626&ext=jpg&ga=GA1.2.1995726095.1686674862&semt=ais'
+                } else if (data.weather[0].main == "Drizzel") {
+                    weatherIcon.src = 'https://img.freepik.com/premium-photo/premium-weather-condition-icon-3d-render_150525-88.jpg?w=740'
+                } else if (data.weather[0].main == "Mist") {
+                    weatherIcon.src = 'https://img.freepik.com/premium-photo/premium-weather-condition-icon-3d-render_150525-101.jpg?size=626&ext=jpg'
+                } else if (data.weather[0].main == "Snow") {
+                    weatherIcon.src = 'https://img.freepik.com/premium-photo/premium-weather-condition-icon-3d-render_150525-101.jpg?size=626&ext=jpg'
+                }
+                document.querySelector('.weather').style.display = 'block'
+                document.querySelector('.error').style.display = 'none';
+
+
+            }
+
+
+
+
+        }
+        searchBtn.addEventListener("click", () => {
+            checkWeather(searchBox.value);
+        })
+    </script>
+
+
+
+
+</body>
+
+</html>
